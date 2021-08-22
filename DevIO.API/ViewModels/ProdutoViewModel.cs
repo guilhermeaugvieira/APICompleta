@@ -35,7 +35,5 @@ namespace DevIO.API.ViewModels
 
         [ScaffoldColumn(false)]
         public string NomeFornecedor { get; set; }
-
-
     }
 }
