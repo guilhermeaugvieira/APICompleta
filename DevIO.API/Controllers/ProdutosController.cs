@@ -57,18 +57,11 @@ namespace DevIO.API.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            if(!(string.IsNullOrEmpty(produtoViewModel.Imagem) || string.IsNullOrEmpty(produtoViewModel.ImagemUpload)))
-            {
-                var imagemNome = Guid.NewGuid() + "_" + produtoViewModel.Imagem;
+            var imagemNome = Guid.NewGuid() + "_" + produtoViewModel.Imagem;
 
-                if (!UploadArquivo(produtoViewModel.ImagemUpload, imagemNome)) return CustomResponse(produtoViewModel);
+            if (!UploadArquivo(produtoViewModel.ImagemUpload, imagemNome)) return CustomResponse(produtoViewModel);
 
-                produtoViewModel.Imagem = imagemNome;
-
-            } else
-            {
-                produtoViewModel.Imagem = "";
-            }
+            produtoViewModel.Imagem = imagemNome;
 
             await _produtoService.Adicionar(_mapper.Map<Produto>(produtoViewModel));
 
@@ -77,13 +70,13 @@ namespace DevIO.API.Controllers
 
         private bool UploadArquivo(string arquivo, string imgNome)
         {
-            var imageDataByteArray = Convert.FromBase64String(arquivo);
-
             if (string.IsNullOrEmpty(arquivo))
             {
                 NotificarErro("Forneça uma imagem para este produto!");
                 return false;
             }
+
+            var imageDataByteArray = Convert.FromBase64String(arquivo);
 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imgNome);
 

@@ -48,14 +48,12 @@ export abstract class BaseService {
         let errMsg: string;
 
         if (error instanceof Response) {
-
             errMsg = `${error.status} - ${error.statusText || ''}`;
         }
         else {
-            errMsg = error.message ? error.message : error.toString();
+            errMsg = error ? error : error.toString();
         }
 
-        console.error(errMsg);
         return throwError(errMsg);
     }
 }

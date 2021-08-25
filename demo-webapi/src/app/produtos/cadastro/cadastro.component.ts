@@ -58,7 +58,9 @@ export class CadastroComponent implements OnInit {
       this.produtoHandle(produtoForm)
         .subscribe(
           result => { this.onSaveComplete(result) },
-          fail => { this.onError(fail) }
+          fail => {
+            this.onError(fail);
+          }
         );
     }
   }
