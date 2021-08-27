@@ -3,7 +3,6 @@ using DevIO.API.Configurations;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,25 +25,20 @@ namespace DevIO.API
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddIdentityConfiguration(Configuration);
+            
             services.AddAutoMapper(typeof(Startup));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
             services.ResolveDependencies();
 
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true; // Ignora a verificação padrão do model state
-            });
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Development", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-            });
+            services.WebApiConfig();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {            
-             if (env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -54,10 +48,9 @@ namespace DevIO.API
                 app.UseHsts();
             }
 
-            app.UseCors("Development");
+            app.UseAuthentication(); // Sempre precisa vir antes do MVC
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvcConfiguration();
         }
     }
 }
