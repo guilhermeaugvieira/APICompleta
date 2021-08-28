@@ -21,7 +21,7 @@ namespace DevIO.API.Controllers
         private readonly IFornecedorService _fornecedorService;
         private readonly IEnderecoRepository _enderecoRepository;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper, IFornecedorService fornecedorService, IEnderecoRepository enderecoRepository, INotificador notificador) : base(notificador)
+        public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper, IFornecedorService fornecedorService, IEnderecoRepository enderecoRepository, INotificador notificador, IUser user) : base(notificador, user)
         {
             _fornecedorRepository = fornecedorRepository;
             _mapper = mapper;
@@ -73,7 +73,7 @@ namespace DevIO.API.Controllers
         [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<FornecedorViewModel>> Adicionar(FornecedorViewModel fornecedorViewModel)
-        {
+        {            
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             await _fornecedorService.Adicionar(_mapper.Map<Fornecedor>(fornecedorViewModel));

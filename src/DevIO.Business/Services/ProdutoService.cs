@@ -9,7 +9,7 @@ namespace DevIO.Business.Services
     public class ProdutoService : BaseService, IProdutoService
     {
         private readonly IProdutoRepository _produtoRepository;
-        // private readonly IUser _user;
+        // private readonly IUser _user; // Se for utilizar precisa injetar no contrutor
 
         public ProdutoService(IProdutoRepository produtoRepository,
                               INotificador notificador) : base(notificador)
@@ -22,7 +22,7 @@ namespace DevIO.Business.Services
         {
             if (!ExecutarValidacao(new ProdutoValidation(), produto)) return;
 
-            //var user = _user.GetUserId();
+            // var user = _user.GetUserId(); //Exemplifica a ideia de pegar o usuário de qualquer lugar
 
             await _produtoRepository.Adicionar(produto);
         }
