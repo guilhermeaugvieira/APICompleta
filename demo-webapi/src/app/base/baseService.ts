@@ -51,7 +51,7 @@ export abstract class BaseService {
             errMsg = `${error.status} - ${error.statusText || ''}`;
         }
         else {
-            errMsg = error ? error : error.toString();
+            errMsg = error ? error : `${error.status} - ${error.statusText || ''}`;
         }
 
         return throwError(errMsg);
