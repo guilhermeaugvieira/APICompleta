@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,19 @@ namespace DevIO.API.Configurations
 
             services.AddCors(options =>
             {
-                options.AddPolicy("Development", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                options.AddPolicy("Development", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                );
+                options.AddPolicy("Production", builder => builder
+                    .WithMethods("GET")
+                    .WithOrigins("http://desenvolvedor.io")
+                    .SetIsOriginAllowedToAllowWildcardSubdomains()
+                    //.WithHeaders(HeaderNames.ContentType, "x-custom-header")
+                    .AllowAnyHeader()
+                );
             });
 
             return services;
@@ -29,11 +42,9 @@ namespace DevIO.API.Configurations
 
         public static IApplicationBuilder UseMvcConfiguration(this IApplicationBuilder app)
         {
-            app.UseCors("Development");
+            app.UseHttpsRedirection();
 
             app.UseMvc();
-
-            app.UseHttpsRedirection();
 
             return app;
         }
