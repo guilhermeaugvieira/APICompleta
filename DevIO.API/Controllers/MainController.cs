@@ -44,12 +44,13 @@ namespace DevIO.API.Controllers
                 });
             }
 
-            return BadRequest(new {
+            return BadRequest(new
+            {
                 success = false,
                 errors = _notificador.ObterNotificacoes().Select(n => n.Mensagem)
             });
         }
-        
+
         protected ActionResult CustomResponse(ModelStateDictionary modelState)
         {
             if (!modelState.IsValid) NotificarErroModelInvalida(modelState);
@@ -59,7 +60,7 @@ namespace DevIO.API.Controllers
         protected void NotificarErroModelInvalida(ModelStateDictionary modelState)
         {
             var erros = modelState.Values.SelectMany(e => e.Errors);
-            foreach(var erro in erros)
+            foreach (var erro in erros)
             {
                 var errorMsg = erro.Exception == null ? erro.ErrorMessage : erro.Exception.Message;
                 NotificarErro(errorMsg);

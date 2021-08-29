@@ -1,22 +1,22 @@
 ﻿using DevIO.API.Configurations;
+using DevIO.API.Controllers;
 using DevIO.API.ViewModels;
 using DevIO.Business.Intefaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevIO.API.Controllers
+namespace DevIO.API.V1.Controllers
 {
-    [Route("api")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -43,7 +43,7 @@ namespace DevIO.API.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, registerUser.Password); // Senha é sempre criptografada
-            
+
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
@@ -54,10 +54,10 @@ namespace DevIO.API.Controllers
             {
                 NotificarErro(error.Description);
             }
-            
+
             return CustomResponse(registerUser);
         }
-        
+
         [HttpPost("login")]
         public async Task<ActionResult> Login(LoginUserViewModel loginUser)
         {
@@ -92,7 +92,7 @@ namespace DevIO.API.Controllers
             claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
 
-            foreach(var userRole in userRoles)
+            foreach (var userRole in userRoles)
             {
                 claims.Add(new Claim("role", userRole));
             }
@@ -115,13 +115,16 @@ namespace DevIO.API.Controllers
 
             // string[] excludedClaims = new string[5] { "sub", "email", "jti", "nbf", "iat" }; // Remove as claims que considero não ter necessidade
 
-            var response = new LoginResponseViewModel{
+            var response = new LoginResponseViewModel
+            {
                 AccessToken = encodedToken,
                 ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
-                UserToken = new UserTokenViewModel{
+                UserToken = new UserTokenViewModel
+                {
                     Id = user.Id,
                     Email = user.Email,
-                    Claims = claims.Select(c => new ClaimViewModel{
+                    Claims = claims.Select(c => new ClaimViewModel
+                    {
                         Type = c.Type,
                         Value = c.Value,
                     })

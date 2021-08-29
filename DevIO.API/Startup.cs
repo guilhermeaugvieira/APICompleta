@@ -46,12 +46,11 @@ namespace DevIO.API
             else
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseCors("Production");
+                app.UseCors("Production"); // Deve ser chamado antes do MVC
                 app.UseHsts();
             }
 
             app.UseAuthentication(); // Sempre precisa vir antes do MVC
-
             app.UseMvcConfiguration();
         }
     }

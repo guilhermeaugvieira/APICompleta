@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevIO.API.Controllers;
 using DevIO.API.Extensions;
 using DevIO.API.ViewModels;
 using DevIO.Business.Intefaces;
@@ -9,11 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DevIO.API.Controllers
+namespace DevIO.API.V1.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class FornecedoresController : MainController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
@@ -29,6 +30,7 @@ namespace DevIO.API.Controllers
             _enderecoRepository = enderecoRepository;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<FornecedorViewModel>> ObterTodos()
         {
@@ -42,7 +44,7 @@ namespace DevIO.API.Controllers
         {
             var fornecedor = _mapper.Map<FornecedorViewModel>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id)); // Poderia passar de forma separada mas, fiz desta forma
 
-            if(fornecedor == null) return NotFound();
+            if (fornecedor == null) return NotFound();
 
             return fornecedor;
         }
@@ -55,7 +57,7 @@ namespace DevIO.API.Controllers
 
         [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("atualizar-endereco/{id:guid}")]
-        public async Task <IActionResult> AtualizarEndereco(Guid id, EnderecoViewModel enderecoViewModel)
+        public async Task<IActionResult> AtualizarEndereco(Guid id, EnderecoViewModel enderecoViewModel)
         {
             if (id != enderecoViewModel.Id)
             {
@@ -73,7 +75,7 @@ namespace DevIO.API.Controllers
         [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<FornecedorViewModel>> Adicionar(FornecedorViewModel fornecedorViewModel)
-        {            
+        {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             await _fornecedorService.Adicionar(_mapper.Map<Fornecedor>(fornecedorViewModel));
