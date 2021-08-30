@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace DevIO.API
 {
@@ -37,7 +36,7 @@ namespace DevIO.API
 
             services.AddSwaggerConfig();
 
-            services.AddLoggingConfiguration();
+            services.AddLoggingConfiguration(Configuration);
 
             services.ResolveDependencies();
         }
