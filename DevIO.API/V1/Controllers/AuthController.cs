@@ -70,7 +70,7 @@ namespace DevIO.API.V1.Controllers
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("Usuário" + loginUser.Email + "logado com sucesso");
+                _logger.LogInformation("Usuário " + loginUser.Email + " logado com sucesso"); //Exemplo de log
                 return CustomResponse(await GerarJwt(loginUser.Email));
             }
 
