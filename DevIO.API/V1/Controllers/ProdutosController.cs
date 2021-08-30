@@ -175,7 +175,7 @@ namespace DevIO.API.V1.Controllers
         [DisableRequestSizeLimit] // Desativa o limite do request
         [RequestSizeLimit(41943040)] // Limita a 40 Mb
         [HttpPost("imagem")]
-        public async Task<ActionResult> AdicionarImagem(IFormFile file)
+        public ActionResult AdicionarImagem(IFormFile file)
         {
             return Ok(file);
         }

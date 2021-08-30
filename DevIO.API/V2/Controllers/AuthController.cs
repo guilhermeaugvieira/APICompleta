@@ -13,9 +13,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevIO.API.V1.Controllers
+namespace DevIO.API.V2.Controllers
 {
-    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}")]
     public class AuthController : MainController
     {
